@@ -64,7 +64,7 @@ COPY . src/
 ENV BAZEL_CXXOPTS="-std=c++17"
 RUN cd src                                                                  && \
     CC=/usr/bin/gcc CXX=/usr/bin/g++                                           \
-    bazel build -c opt -- ... -third_party/spanner_pg/src/...
+    bazel build -c dbg -- ... -third_party/spanner_pg/src/...
 
 # Generate licenses file.
 RUN for file in $(find -L src/bazel-src/external                               \
@@ -82,7 +82,7 @@ RUN for file in $(find -L src/bazel-src/external                               \
 ################################################################################
 
 # Now build the release image from the build image.
-FROM gcr.io/distroless/cc-debian12
+FROM debian:12
 
 # Copy binaries.
 COPY --from=build /src/bazel-bin/binaries/emulator_main .
